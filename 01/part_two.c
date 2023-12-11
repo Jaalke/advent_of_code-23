@@ -1,50 +1,26 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-char *DIGIT_STRINGS[] = {"one", "two", "three", "four", "five", "six", "seven", "eight", "nine"}; 
+const char *DIGIT_WORDS[] = {"one", "two", "three", "four", "five", "six", "seven", "eight", "nine"}; 
+const char *DIGIT_SYMBOLS[] = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
 
-void add_incomplete_word(char *og_string, char *word, int n_letters, int starting_at) {
-    for (int i = 0; i < n_letters; i++) {
-        og_string[starting_at + i] = word[i];
-    }
-}
-
-char *word_to_digit(char *og_string, char *word, int digit) {
-    char *output = (char *) calloc(128, sizeof(char));
-    int word_i = 0;
-    int string_i = 0;
-    int output_i = 0;
-    int word_detected = 0;
-
-    while (og_string[string_i] != '\n') {
-
-        if (word_detected == 1) {
-            if (word[word_i] == '\0') {
-                output[output_i] = digit + 48;
-                word_i = 0;
-                output_i++;
-            } else if (og_string[string_i] == word[word_i]) {
-                word_i++;
-            } else {
-                add_incomplete_word(output, word, word_i, output_i);
-                word_detected = 0;
-                output_i += word_i;
-                word_i = 0;
-            }
-        } else {
-            if (og_string[string_i] == word[word_i]) {
-                word_detected = 1;
-                word_i++;
-            } else {
-                output[output_i] = og_string[string_i];
-                output_i++;
+int *mark_occurences(int *mark_array, char *input_string, const char *word, int digit) {
+    size_t word_len = strlen(word);
+    size_t string_len = strlen(input_string);
+    
+    for (int i = 0; i < string_len; i++) {
+        int is_matched = 1;
+        for (int j = 0; j < word_len; j++) {
+            if (input_string[i + j] != word[j]) {
+                is_matched = 0;
+                break;
             }
         }
-
-        string_i++;
+        if (is_matched == 1) {
+            mark_array[i] = digit;
+        }
     }
-
-    return output;
 }
 
 int get_calibration_no(char *line) {
@@ -53,39 +29,41 @@ int get_calibration_no(char *line) {
     int is_first_digit = 1;
     int i = 0;
 
-    while (line[i] != '\n') {
-        if (line[i] > 47 && line[i] < 58) {
+    int *digit_array = (int *) calloc(strlen(line), sizeof(int));
+
+    for (int i = 0; i < 9; i++) {
+        mark_occurences(digit_array, line, DIGIT_WORDS[i], i + 1);
+        mark_occurences(digit_array, line, DIGIT_SYMBOLS[i], i + 1);
+    }
+
+    for (int i = 0; i < strlen(line); i++) {
+        if (digit_array[i] != 0) {
             if (is_first_digit == 1) {
-                first_digit = line[i] - 48;
-                second_digit = first_digit;
                 is_first_digit = 0;
+                first_digit = digit_array[i];
+                second_digit = first_digit;
             } else {
-                second_digit = line[i] - 48;
+                second_digit = digit_array[i];
             }
         }
-
-        i++;
     }
-    
+
     return first_digit * 10 + second_digit;
 }
 
 int main(int argc, char **argv) {
-    // char filename[] = "input.txt";
-    // FILE *input_file = fopen(filename, "r");
+    char filename[] = "input.txt";
+    FILE *input_file = fopen(filename, "r");
 
-    // int calibration_total = 0;
+    int calibration_total = 0;
 
-    // char current_line[128];
-    // while (fgets(current_line, sizeof(current_line), input_file) != NULL) {
-    //     calibration_total += get_calibration_no(current_line);
-    // }
+    char current_line[128];
+    while (fgets(current_line, sizeof(current_line), input_file) != NULL) {
+        calibration_total += get_calibration_no(current_line);
+    }
 
-    // printf("The calibration total is %d.\n", calibration_total);
-    // fclose(input_file);
+    printf("The calibration total is %d.\n", calibration_total);
+    fclose(input_file);
 
-    char *test_string = "1dfdfhasersf32awerfseven";
-    char *out_string = word_to_digit(test_string, "seven", 7);
-    printf("%s\n", out_string);
     return 0;
 }
