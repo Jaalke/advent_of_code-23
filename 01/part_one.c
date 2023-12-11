@@ -5,6 +5,7 @@ int get_calibration_no(char *line) {
     int second_digit = 0;
     int is_first_digit = 1;
     int i = 0;
+
     while (line[i] != '\n') {
         if (line[i] > 47 && line[i] < 58) {
             if (is_first_digit == 1) {
@@ -17,11 +18,12 @@ int get_calibration_no(char *line) {
         }
         i++;
     }
+    
     return first_digit * 10 + second_digit;
 }
 
 int main(int argc, char **argv) {
-    char filename[] = "input_one.txt";
+    char filename[] = "input.txt";
     FILE *input_file = fopen(filename, "r");
 
     int calibration_total = 0;
