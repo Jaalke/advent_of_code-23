@@ -5,7 +5,11 @@
 const char *DIGIT_WORDS[] = {"one", "two", "three", "four", "five", "six", "seven", "eight", "nine"}; 
 const char *DIGIT_SYMBOLS[] = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
 
-int *mark_occurences(int *mark_array, char *input_string, const char *word, int digit) {
+int *mark_occurrences(int *mark_array, char *input_string, const char *word, int digit) {
+    // Returns an int array the length of the input string, with digits 1-9 marked 
+    // at positions they start in the string, and 0 for positions with no digit
+    // starting at that position in the string. For "1twof", the return is [1,2,0,0,0]
+
     size_t word_len = strlen(word);
     size_t string_len = strlen(input_string);
     
@@ -32,8 +36,8 @@ int get_calibration_no(char *line) {
     int *digit_array = (int *) calloc(strlen(line), sizeof(int));
 
     for (int i = 0; i < 9; i++) {
-        mark_occurences(digit_array, line, DIGIT_WORDS[i], i + 1);
-        mark_occurences(digit_array, line, DIGIT_SYMBOLS[i], i + 1);
+        mark_occurrences(digit_array, line, DIGIT_WORDS[i], i + 1);
+        mark_occurrences(digit_array, line, DIGIT_SYMBOLS[i], i + 1);
     }
 
     for (int i = 0; i < strlen(line); i++) {
