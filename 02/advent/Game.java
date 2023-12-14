@@ -1,16 +1,15 @@
-import java.io.*;
-import java.util.*;
+package advent;
 
-class Game {
-    int minRedCubes;
-    int minGreenCubes;
-    int minBlueCubes;
-    int gameId;
+public class Game {
+    private int minRedCubes;
+    private int minGreenCubes;
+    private int minBlueCubes;
+    private int gameId;
 
     public Game(String line) {
-        minRedCubes = 0;
-        minGreenCubes = 0;
-        minBlueCubes = 0;
+        minRedCubes = 1;
+        minGreenCubes = 1;
+        minBlueCubes = 1;
 
         line = line.substring(5);
         this.gameId = Integer.parseInt(line.split(":\\s")[0]);
@@ -23,10 +22,12 @@ class Game {
                         if (numberOf > minRedCubes) {
                             this.minRedCubes = numberOf;
                         }
+                        break;
                     case "green":
                         if (numberOf > minGreenCubes) {
                             this.minGreenCubes = numberOf;
                         }
+                        break;
                     case "blue":
                         if (numberOf > minBlueCubes) {
                             this.minBlueCubes = numberOf;
@@ -37,38 +38,46 @@ class Game {
         }
     }
 
-    boolean isPossible(int redCubes, int greenCubes, int blueCubes) {
+    public int getMinRedCubes() {
+        return this.minRedCubes;
+    }
+
+    public int getMinGreenCubes() {
+        return this.minGreenCubes;
+    }
+
+    public int getMinBlueCubes() {
+        return this.minBlueCubes;
+    }
+
+    public int getGameId() {
+        return this.gameId;
+    }
+
+    public void setMinRedCubes(int minRedCubes) {
+        this.minRedCubes = minRedCubes;
+    }
+
+    public void setMinGreenCubes(int minGreenCubes) {
+        this.minGreenCubes = minGreenCubes;
+    }
+
+    public void setMinBlueCubes(int minBlueCubes) {
+        this.minBlueCubes = minBlueCubes;
+    }
+
+    public void setGameId(int gameId) {
+        this.gameId = gameId;
+    }
+
+    public boolean isPossible(int redCubes, int greenCubes, int blueCubes) {
         boolean redPossible = redCubes >= minRedCubes;
         boolean greenPossible = greenCubes >= minGreenCubes;
         boolean bluePossible = blueCubes >= minBlueCubes;
         return redPossible && greenPossible && bluePossible;
     }
-}
-
-public class PartOne {
-    public static void main(String[] args) throws IOException{
-        BufferedReader input = null;
-        ArrayList<Game> games = new ArrayList<Game>();
-
-        try {
-            input = new BufferedReader(new FileReader("input.txt"));
-            String line;
-            while ((line = input.readLine()) != null) {
-                games.add(new Game(line));
-            }
-        } finally {
-            if (input != null) {
-                input.close();
-            }
-        }
-
-    int sumOfPossibleIds = 0;
-    for (Game game : games) {
-        if (game.isPossible(12, 13, 14)) {
-            sumOfPossibleIds += game.gameId;
-            }
-        }
-    System.out.println(String.format("The sum of IDs of possible games is %d.", 
-    sumOfPossibleIds));
+    
+    public int getPowerOfSet() {
+        return (this.minRedCubes * this.minGreenCubes * this.minBlueCubes);
     }
 }
