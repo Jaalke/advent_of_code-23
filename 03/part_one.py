@@ -8,13 +8,15 @@ SYMBOLS = ['!', '@', '#', '$', '%', '^', '&', '*', '(' ,')', '-', '_', '=', '+',
 @dataclass
 class PartNumber:
     number: int
-    starts_at: tuple[int]
-    ends_at: tuple[int]
+    on_line: int
+    starts_at: int
+    ends_at: int
     is_part: bool
 
 @dataclass
 class Symbol:
     symbol: str
+    on_line: int
     at: int
 
 def find_numbers(schematic_lines: list[str]) -> list[PartNumber]:
@@ -33,7 +35,7 @@ def find_numbers(schematic_lines: list[str]) -> list[PartNumber]:
             else:
                 if reading_number:
                     reading_number = False
-                    numbers.append(PartNumber(int(number), starts_at, j, False))
+                    numbers.append(PartNumber(int(number), i, starts_at, j, False))
                     number = ""
 
     return numbers
@@ -44,10 +46,16 @@ def find_symbols(schematic_lines: list[str]) -> list[Symbol]:
     for i, line in enumerate(schematic_lines):
         for j, ch in enumerate(line):
             if ch in SYMBOLS:
-                symbols.append(Symbol(ch, j))
+                symbols.append(Symbol(ch, i, j))
 
     return symbols
 
+def get_vertically_adjecent_symbols(symbols: list[Symbol], line) -> list[PartNumber]:
+    filter_fun = lambda x : x.on_line < line + 2 and x.on_line > line - 2
+    return filter(filter_fun, symbols)
+
+def is_part_number(part: PartNumber, symbols: list[Symbol]) -> bool:
+    pass
 
 if __name__ == "__main__":
     with open("input.txt") as input_file:
@@ -56,5 +64,5 @@ if __name__ == "__main__":
     symbols = find_symbols(input_lines)
     numbers = find_numbers(input_lines)
 
-    print( [number.number for number in numbers] )
-    print( [symbol.symbol for symbol in symbols] )
+    for number in numbers:
+        is_part_number(number, symbols)
