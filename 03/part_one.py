@@ -11,52 +11,50 @@ class PartNumber:
     starts_at: tuple[int]
     ends_at: tuple[int]
     is_part: bool
-    neighbor_grids: list[tuple[int]]
 
 @dataclass
 class Symbol:
     symbol: str
     at: int
-    neighbor_grids: list[tuple[int]]
 
-def calculate_neighbor_grids(starts_at: int, ends_at: int, line_no: tuple[int]):
-    grids: tuple[int] = ()
-    if line_no[0] != 0:
-        for i in range(starts_at):
-            pass
+def find_numbers(schematic_lines: list[str]) -> list[PartNumber]:
+    numbers = []
+    
+    for i, line in enumerate(schematic_lines):
+        reading_number = False
+        number = ""
+        starts_at = 0
+        for j, ch in enumerate(line):
+            if ch in DIGITS:
+                if not reading_number:
+                    starts_at = j
+                number += ch
+                reading_number = True
+            else:
+                if reading_number:
+                    reading_number = False
+                    numbers.append(PartNumber(int(number), starts_at, j, False))
+                    number = ""
 
-def find_numbers_in_line(line: str, line_no: tuple[int]) -> list[PartNumber]:
-    global DIGITS
-    numbers: list[PartNumber] = []
-    starts_at: int = -1
-    scaning_number: bool = False
-    scanned_number: str = ""
-    for i, char in enumerate(line):
-        if char in DIGITS:
-            if not scaning_number:
-                scaning_number = True
-                starts_at = i
-            scanned_number + char
-        else:
-            if scaning_number:
-                numbers.append(PartNumber(int(scaning_number), (line_no[0], starts_at),
-                                          (line_no[0], i - 1), False, 
-                                          calculate_neighbor_grids(starts_at, i - 1, line_no)))
-                scaning_number = False
-                starts_at = -1
-                
+    return numbers
 
+def find_symbols(schematic_lines: list[str]) -> list[Symbol]:
+    symbols = []
 
-def find_symbols_in_line(line: str) -> list[Symbol]:
-    global SYMBOLS
-    pass
+    for i, line in enumerate(schematic_lines):
+        for j, ch in enumerate(line):
+            if ch in SYMBOLS:
+                symbols.append(Symbol(ch, j))
+
+    return symbols
+
 
 if __name__ == "__main__":
     with open("input.txt") as input_file:
         input_lines = input_file.readlines()
 
-    symbols = list[Symbol]
-    part_numbers = list[PartNumber]
+    symbols = find_symbols(input_lines)
+    numbers = find_numbers(input_lines)
 
-    for i, line in enumerate(input_lines):
-        print(line)
+    print( [number.number for number in numbers] )
+    print( [symbol.symbol for symbol in symbols] )
