@@ -54,8 +54,17 @@ def get_vertically_adjecent_symbols(symbols: list[Symbol], line) -> list[PartNum
     filter_fun = lambda x : x.on_line < line + 2 and x.on_line > line - 2
     return filter(filter_fun, symbols)
 
+def is_horizontally_adjacent(part: PartNumber, symbol: Symbol) -> bool:
+    if symbol.at > part.starts_at - 2 and symbol.at < part.ends_at + 2:
+        return True
+    else:
+        return False
+
 def is_part_number(part: PartNumber, symbols: list[Symbol]) -> bool:
-    pass
+    for symbol in get_vertically_adjecent_symbols(symbols, part.on_line):
+        if is_horizontally_adjacent(part, symbol):
+            return True
+    return False
 
 if __name__ == "__main__":
     with open("input.txt") as input_file:
@@ -64,5 +73,10 @@ if __name__ == "__main__":
     symbols = find_symbols(input_lines)
     numbers = find_numbers(input_lines)
 
+    part_number_sum = 0
+
     for number in numbers:
-        is_part_number(number, symbols)
+        if is_part_number(number, symbols):
+            part_number_sum += number.number
+
+    print(f"The sum of enigne part numbers is {part_number_sum}.")
