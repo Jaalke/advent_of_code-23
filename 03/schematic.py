@@ -50,9 +50,13 @@ def find_symbols(schematic_lines: list[str]) -> list[Symbol]:
 
     return symbols
 
-def get_vertically_adjecent_symbols(symbols: list[Symbol], line) -> list[PartNumber]:
+def get_vertically_adjecent_symbols(symbols: list[Symbol], line) -> list[Symbol]:
     filter_fun = lambda x : x.on_line < line + 2 and x.on_line > line - 2
     return filter(filter_fun, symbols)
+
+def get_vertically_adjecent_numbers(numbers: list[PartNumber], line) -> list[PartNumber]:
+    filter_fun = lambda x : x.on_line < line + 2 and x.on_line > line - 2
+    return filter(filter_fun, numbers)
 
 def is_horizontally_adjacent(part: PartNumber, symbol: Symbol) -> bool:
     if symbol.at > part.starts_at - 2 and symbol.at < part.ends_at + 2:
@@ -66,3 +70,12 @@ def is_part_number(part: PartNumber, symbols: list[Symbol]) -> bool:
             return True
     return False
 
+def get_gear_ratio(symbol: Symbol, part_numbers: list[Symbol]) -> int:
+    if symbol.symbol != '*':
+        return 0
+    adjecent_numbers = [nr.number for nr in get_vertically_adjecent_numbers(part_numbers, symbol.on_line)\
+                        if is_horizontally_adjacent(nr, symbol)]
+    if len(adjecent_numbers) == 2:
+        return adjecent_numbers[0] * adjecent_numbers[1]
+    else:
+        return 0
