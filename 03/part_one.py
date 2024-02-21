@@ -3,7 +3,7 @@ import typing
 
 DIGITS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 SYMBOLS = ['!', '@', '#', '$', '%', '^', '&', '*', '(' ,')', '-', '_', '=', '+',
-           '[', ']', '{', '}', ';', ':', '\'', '|', ',', '?', '/']
+           '[', ']', '{', '}', ';', ':', '\'', '|', ',', '?', '/', '\\']
 
 @dataclass
 class PartNumber:
@@ -35,7 +35,7 @@ def find_numbers(schematic_lines: list[str]) -> list[PartNumber]:
             else:
                 if reading_number:
                     reading_number = False
-                    numbers.append(PartNumber(int(number), i, starts_at, j, False))
+                    numbers.append(PartNumber(int(number), i, starts_at, j-1, False))
                     number = ""
 
     return numbers
