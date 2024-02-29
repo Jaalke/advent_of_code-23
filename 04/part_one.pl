@@ -1,3 +1,5 @@
+#!/usr/bin/swipl
+
 % Predicates for reading the input
 
 get_lines_from_file(Lines, Filename) :-
@@ -18,6 +20,10 @@ print_lines([end_of_file]).
 print_lines([Current|Rest]) :-
     format("~s ~n", [Current]),
     print_lines(Rest).
+
+%%%%%%%%%%%%
+%%% MAIN %%%
+%%%%%%%%%%%%
 
 :- initialization(main, main).
 
