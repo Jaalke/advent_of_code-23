@@ -23,18 +23,18 @@ print_lines([Current|Rest]) :-
 
 % Predicates for checking points of a card
 
-card_numbers(Card, Numbers) :- 
+card_total_numbers(Card, Numbers) :- 
     split_string(Card, ':', ' ', SplitString),
     nth0(1, SplitString, Numbers).
 
 card_winning_numbers(Card, WinningNumbersList) :-
-    card_numbers(Card, Numbers),
+    card_total_numbers(Card, Numbers),
     split_string(Numbers, '|', ' ', SplitString),
     nth0(0, SplitString, WinningNumbers),
     split_string(WinningNumbers, ' ', ' ', WinningNumbersList).
 
 card_chosen_numbers(Card, WinningNumbersList) :-
-    card_numbers(Card, Numbers),
+    card_total_numbers(Card, Numbers),
     split_string(Numbers, '|', ' ', SplitString),
     nth0(1, SplitString, WinningNumbers),
     split_string(WinningNumbers, ' ', ' ', WinningNumbersList).
