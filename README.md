@@ -22,4 +22,5 @@ pattern behind my choices.
 1. **C** - both parts done
 2. **Java** - both parts done
 3. **Python** - both parts done
-4. **Prolog** - WIP
+4. **Prolog** - part one done
+5. **Lua** - WIP
