@@ -6,7 +6,8 @@ card_number(Card, Number) :-
     split_string(Card, ':', ' ', SplitOne),
     nth0(0, SplitOne, StringOne),
     split_string(StringOne, ' ', ' ', SplitTwo),
-    nth0(1, SplitTwo, Number).
+    nth0(1, SplitTwo, NumberString),
+    atom_number(NumberString, Number).
 
 % This predicate is needed to generate a list of cards won based on the card number/points
 
@@ -20,7 +21,7 @@ cards_from_points(CardNumber, Points, [NextCardNumber|Rest]) :-
     CardNumber < 220,
     NextCardNumber is CardNumber + 1,
     NextPoints is Points - 1,
-    card_from_points(NextCardNumber, NextPoints, Rest).
+    cards_from_points(NextCardNumber, NextPoints, Rest).
 
 % Predicate for finding cards won from a card
 
